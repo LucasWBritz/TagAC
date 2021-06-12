@@ -4,7 +4,10 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
+using TagAC.Apis.AccessControl.Configurations;
 using TagAC.Apis.AccessControl.Middlewares;
+using TagAC.Apis.AccessControl.Repositories;
+using TagAC.Apis.AccessControl.Services;
 using TagAC.Apis.AccessControl.Sessions;
 
 namespace TagAC.Apis.AccessControl
@@ -25,9 +28,13 @@ namespace TagAC.Apis.AccessControl
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "TagAC.Apis.AccessControl", Version = "v1" });
-            });
+            });            
+
+            services.ConfigureCaching(Configuration);
 
             services.AddScoped<IHeaderParametersSession, HeaderParametersSession>();
+            services.AddScoped<IAccessControlService, AccessControlService>();
+            services.AddScoped<ICacheRepository, CacheRepository>();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -45,7 +52,7 @@ namespace TagAC.Apis.AccessControl
 
             app.UseAuthorization();
 
-            app.UseMiddleware<CustomSessionParametersMiddleware>();
+            app.UseMiddleware<HeaderParametersMiddleware>();
 
             app.UseEndpoints(endpoints =>
             {

@@ -4,11 +4,11 @@ using TagAC.Apis.AccessControl.Sessions;
 
 namespace TagAC.Apis.AccessControl.Middlewares
 {
-    public class CustomSessionParametersMiddleware
+    public class HeaderParametersMiddleware
     {
         private readonly RequestDelegate _next;
 
-        public CustomSessionParametersMiddleware(RequestDelegate next)
+        public HeaderParametersMiddleware(RequestDelegate next)
         {
             _next = next;
         }
@@ -22,11 +22,11 @@ namespace TagAC.Apis.AccessControl.Middlewares
                 session.RFID = rfid;
             }
 
-            if (context.Request.Headers.ContainsKey("LockId"))
+            if (context.Request.Headers.ContainsKey("DeviceId"))
             {
-                var lockId = context.Request.Headers["LockId"].ToString().Trim();
+                var lockId = context.Request.Headers["DeviceId"].ToString().Trim();
 
-                session.LockId = lockId;
+                session.DeviceId = lockId;
             }
 
             await _next(context);

@@ -1,8 +1,10 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using System.Threading;
 using System.Threading.Tasks;
-using TagAC.Apis.AccessControl.Sessions;
+using TagAC.Apis.AccessControl.Services;
+using TagAC.Core.Enums;
 
 namespace TagAC.Apis.AccessControl.Controllers
 {
@@ -10,21 +12,29 @@ namespace TagAC.Apis.AccessControl.Controllers
     [Route("[controller]")]
     public class AccessControlController
     {
-        private readonly IHeaderParametersSession _session;
         private readonly ILogger<AccessControlController> _logger;
+        private readonly IAccessControlService _service;
 
-        public AccessControlController(IHeaderParametersSession session, ILogger<AccessControlController> logger)
+        public AccessControlController(ILogger<AccessControlController> logger, IAccessControlService accessControlService)
         {
-            _session = session;
             _logger = logger;
+            _service = accessControlService;
         }
 
         [HttpGet]
-        public async Task<IActionResult> Authorize()
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        public async Task<IActionResult> Authorize(CancellationToken cancellationToken)
         {
-            _logger.LogInformation($"Request from {_session.RFID} rfid to lock id {_session.LockId}.");
-            
-            return Authorized();
+            _logger.LogInformation("Testing");
+            var authorizationStatus = await _service.GetAuthorization(cancellationToken);
+
+            if (authorizationStatus == AuthorizationStatus.Authorized)
+            {
+                return Authorized();
+            }
+
+            return Denied();
         }
 
         private IActionResult Authorized()
@@ -34,11 +44,11 @@ namespace TagAC.Apis.AccessControl.Controllers
             return new StatusCodeResult(StatusCodes.Status200OK);
         }
 
-        private IActionResult Unauthorized()
+        private IActionResult Denied()
         {
             _logger.LogWarning("Unauthorized. Access denied.");
 
-            return new StatusCodeResult(StatusCodes.Status403Forbidden);
+            return new StatusCodeResult(StatusCodes.Status401Unauthorized);
         }
     }
 }

@@ -1,12 +1,10 @@
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 using Serilog;
 using Serilog.Sinks.Elasticsearch;
 using System;
-using System.Net;
 
-namespace TagAC.Apis.AccessControl
+namespace TagAC.Apis.Identity
 {
     public class Program
     {
@@ -25,7 +23,7 @@ namespace TagAC.Apis.AccessControl
                         .WriteTo.Elasticsearch(new ElasticsearchSinkOptions(new Uri(context.Configuration["ElasticConfiguration:Uri"]))
                         {
                             IndexFormat = $"{context.Configuration["ApplicationName"]}-logs-{context.HostingEnvironment.EnvironmentName?.ToLower().Replace(".", "-")}-{DateTime.UtcNow:yyyy-MM}",
-                            AutoRegisterTemplate = true    
+                            AutoRegisterTemplate = true
                         })
                         .Enrich.WithProperty("Environment", context.HostingEnvironment.EnvironmentName)
                         .ReadFrom.Configuration(context.Configuration);
@@ -33,6 +31,6 @@ namespace TagAC.Apis.AccessControl
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
                     webBuilder.UseStartup<Startup>();
-                });        
+                });
     }
 }
