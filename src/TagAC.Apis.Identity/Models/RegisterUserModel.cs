@@ -12,7 +12,7 @@ namespace TagAC.Apis.Identity.Models
         public string Email { get; set; }
 
         [Required]
-        [StringLength(100, MinimumLength = 8)]
+        [StringLength(100, MinimumLength = 6)]
         public string Password { get; set; }
 
         [Compare("Password", ErrorMessage = "Both passwords must match.")]

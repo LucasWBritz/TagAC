@@ -12,9 +12,12 @@ namespace TagAC.Apis.Identity.Configuration
         {
             services.AddDbContext<TagacIdentityDbContext>(opts => opts.UseSqlServer(configuration.GetConnectionString("DefaultConnection")));
 
-            services.AddIdentity<IdentityUser, IdentityRole>()                
-                .AddEntityFrameworkStores<TagacIdentityDbContext>()
-                .AddDefaultTokenProviders();
+            services.AddIdentity<IdentityUser, IdentityRole>((options) =>
+            {
+                options.Password.RequireUppercase = false;
+            })
+            .AddEntityFrameworkStores<TagacIdentityDbContext>()
+            .AddDefaultTokenProviders();
 
             services.AddJwtConfiguration(configuration);
 

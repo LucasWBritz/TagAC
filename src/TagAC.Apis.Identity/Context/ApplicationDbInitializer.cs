@@ -17,7 +17,7 @@ namespace TagAC.Apis.Identity.Context
                     EmailConfirmed = true
                 };
 
-                IdentityResult result = await userManager.CreateAsync(user, "123@Qwe");
+                IdentityResult result = await userManager.CreateAsync(user, "123@qwe");
 
                 if (result.Succeeded)
                 {

@@ -23,7 +23,6 @@ namespace TagAC.Apis.AccessControl
         
         public void ConfigureServices(IServiceCollection services)
         {
-
             services.AddControllers();
             services.AddSwaggerGen(c =>
             {
@@ -38,13 +37,13 @@ namespace TagAC.Apis.AccessControl
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
-        {
+        {        
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
                 app.UseSwagger();
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "TagAC.Apis.AccessControl v1"));
-            }
+            }            
 
             app.UseHttpsRedirection();
 

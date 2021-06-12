@@ -26,7 +26,6 @@ namespace TagAC.Apis.AccessControl.Controllers
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public async Task<IActionResult> Authorize(CancellationToken cancellationToken)
         {
-            _logger.LogInformation("Testing");
             var authorizationStatus = await _service.GetAuthorization(cancellationToken);
 
             if (authorizationStatus == AuthorizationStatus.Authorized)

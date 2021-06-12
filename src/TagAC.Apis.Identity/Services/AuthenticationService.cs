@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using System;
@@ -15,14 +16,17 @@ namespace TagAC.Apis.Identity.Services
 {
     public class AuthenticationService : IAuthenticationService
     {
+        private readonly ILogger<AuthenticationService> _logger;
         private readonly SignInManager<IdentityUser> _signInManager;
         private readonly UserManager<IdentityUser> _userManager;
-        private JwtConfigSettings _jwtConfig;
+        private JwtConfigSettings _jwtConfig;       
 
-        public AuthenticationService(SignInManager<IdentityUser> signInManager,
+        public AuthenticationService(ILogger<AuthenticationService>  logger,
+            SignInManager<IdentityUser> signInManager,
             UserManager<IdentityUser> userManager,
             IOptions<JwtConfigSettings> jwtSettings)
         {
+            _logger = logger;
             _signInManager = signInManager;
             _userManager = userManager;
             _jwtConfig = jwtSettings.Value;
@@ -30,21 +34,29 @@ namespace TagAC.Apis.Identity.Services
 
         public async Task<AuthResult<LoginResponseModel>> Login(LoginModel input)
         {
+            _logger.LogInformation($"Login attempt for {input.Email}");
+
             var result = await _signInManager.PasswordSignInAsync(input.Email, input.Password, false, true);
 
             if (result.Succeeded)
             {
+                _logger.LogInformation($"Login succeeded for {input.Email}");
+
                 var jwtToken = await CreateJwt(input.Email);
                 return new AuthResult<LoginResponseModel>(jwtToken);
             }
 
             if (result.IsLockedOut)
             {
+                _logger.LogWarning($"Account locked for {input.Email}");
+
                 return new AuthResult<LoginResponseModel>(null)
                 {
                     ValidationErrors = new string[] { "Account locked." }
                 };
             }
+
+            _logger.LogWarning($"Wrong credentials for user {input.Email}");
 
             return new AuthResult<LoginResponseModel>(null)
             {
@@ -54,6 +66,8 @@ namespace TagAC.Apis.Identity.Services
 
         public async Task<AuthResult<LoginResponseModel>> RegisterUser(RegisterUserModel input)
         {
+            _logger.LogInformation($"Registering new user {input.Email}");
+
             var newUser = new IdentityUser
             {
                 UserName = input.Email,
@@ -64,9 +78,13 @@ namespace TagAC.Apis.Identity.Services
             var result = await _userManager.CreateAsync(newUser, input.Password);
             if (result.Succeeded)
             {
+                _logger.LogInformation($"New user registered. - {input.Email}");
+
                 var jwtResponse = await CreateJwt(newUser.Email);
                 return new AuthResult<LoginResponseModel>(jwtResponse);
             }
+
+            _logger.LogWarning($"Error while registering new user {input.Email}. Errors: {string.Concat("-", result.Errors.Select(x => x.Description))}");
 
             return new AuthResult<LoginResponseModel>(null)
             {

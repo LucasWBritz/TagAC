@@ -70,6 +70,9 @@ services:
       - tagacnetwork
     depends_on:
       - rediscache
+    environment:
+      - "CacheSettings__ConnectionString=rediscache:6379"   
+      - "ElasticConfiguration__Uri=http://es01:9200"
 
   apis.identity:
     container_name: TagAC.APis.Identity
@@ -84,6 +87,9 @@ services:
       - tagacnetwork
     depends_on:
       - tagac.database
+    environment:
+      - "ConnectionStrings__DefaultConnection=Server=tagac.database;Database=TagACAuth;User Id=sa;Password=123@qwe@123;MultipleActiveResultSets=true"       
+      - "ElasticConfiguration__Uri=http://es01:9200"
 
 networks:
     tagacnetwork:
