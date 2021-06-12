@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
 using System;
 using TagAC.Apis.Identity.Configuration;
@@ -36,9 +37,9 @@ namespace TagAC.Apis.Identity
             });            
         }
 
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, UserManager<IdentityUser> userManager, RoleManager<IdentityRole> roleManager)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, UserManager<IdentityUser> userManager, RoleManager<IdentityRole> roleManager, ILogger<Startup> logger)
         {
-            RunDatabaseMigrations(app);
+            RunDatabaseMigrations(app, logger);
             ApplicationDbInitializer.SeedAdminUser(userManager, roleManager).GetAwaiter().GetResult();
 
             if (env.IsDevelopment())
@@ -57,22 +58,22 @@ namespace TagAC.Apis.Identity
             });
         }
 
-        private void RunDatabaseMigrations(IApplicationBuilder app)
+        private void RunDatabaseMigrations(IApplicationBuilder app, ILogger<Startup> logger)
         {
             try
             {
-                Console.WriteLine("Starting Migrations");
+                logger.LogInformation("Starting Migrations");
                 using (var serviceScope = app.ApplicationServices.GetService<IServiceScopeFactory>().CreateScope())
                 {
                     var context = serviceScope.ServiceProvider.GetRequiredService<TagacIdentityDbContext>();
                     context.Database.Migrate();
                 }
 
-                Console.WriteLine("Migrations finished.");
+                logger.LogInformation("Migrations finished.");
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error running initial migrations. {ex.Message}");
+                logger.LogError($"Error running initial migrations. {ex.Message}");
             }
         }
     }

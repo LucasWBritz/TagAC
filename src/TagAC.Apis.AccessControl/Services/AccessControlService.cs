@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using TagAC.Apis.AccessControl.Helpers;
 using TagAC.Apis.AccessControl.Repositories;
 using TagAC.Apis.AccessControl.Sessions;
-using TagAC.Core.Enums;
+using TagAC.Domain.Enums;
 
 namespace TagAC.Apis.AccessControl.Services
 {

@@ -20,7 +20,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\TagAC.Core\TagAC.Core.csproj" />
+    <ProjectReference Include="..\TagAC.Domain\TagAC.Domain.csproj" />
   </ItemGroup>
 
 </Project>

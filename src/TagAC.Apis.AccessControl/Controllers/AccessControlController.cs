@@ -4,7 +4,7 @@ using Microsoft.Extensions.Logging;
 using System.Threading;
 using System.Threading.Tasks;
 using TagAC.Apis.AccessControl.Services;
-using TagAC.Core.Enums;
+using TagAC.Domain.Enums;
 
 namespace TagAC.Apis.AccessControl.Controllers
 {

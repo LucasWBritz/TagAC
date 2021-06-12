@@ -91,6 +91,23 @@ services:
       - "ConnectionStrings__DefaultConnection=Server=tagac.database;Database=TagACAuth;User Id=sa;Password=123@qwe@123;MultipleActiveResultSets=true"       
       - "ElasticConfiguration__Uri=http://es01:9200"
 
+  apis.management:
+    container_name: TagAC.APis.Management
+    image: ${DOCKER_REGISTRY-}tagacapismanagement
+    build:
+      context: .
+      dockerfile: src/TagAC.Apis.Management/Dockerfile
+    ports:
+      - "5005:80"
+      - "5006:443"
+    networks:
+      - tagacnetwork
+    depends_on:
+      - tagac.database
+    environment:
+      - "ConnectionStrings__DefaultConnection=Server=tagac.database;Database=TagACManagement;User Id=sa;Password=123@qwe@123;MultipleActiveResultSets=true"       
+      - "ElasticConfiguration__Uri=http://es01:9200"
+
 networks:
     tagacnetwork:
         driver: bridge

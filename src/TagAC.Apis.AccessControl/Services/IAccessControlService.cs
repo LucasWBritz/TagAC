@@ -1,6 +1,6 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
-using TagAC.Core.Enums;
+using TagAC.Domain.Enums;
 
 namespace TagAC.Apis.AccessControl.Services
 {
