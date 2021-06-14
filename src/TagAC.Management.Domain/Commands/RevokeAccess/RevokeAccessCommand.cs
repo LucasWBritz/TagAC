@@ -1,4 +1,5 @@
 ﻿using System;
+using TagAC.Domain.Commands;
 
 namespace TagAC.Management.Domain.Commands.RevokeAccess
 {

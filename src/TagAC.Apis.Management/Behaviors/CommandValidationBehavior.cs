@@ -3,12 +3,13 @@ using Microsoft.Extensions.Logging;
 using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
+using TagAC.Domain.Commands;
 using TagAC.Management.Domain.Commands;
 
 namespace TagAC.Apis.Management.Behaviors
 {
     public class CommandValidationBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
-        where TResponse : CommandResponse, new()
+        where TResponse : Response, new()
     {
         private readonly ILogger<CommandValidationBehavior<TRequest, TResponse>> logger;
         private readonly IValidationHandler<TRequest> validationHandler;

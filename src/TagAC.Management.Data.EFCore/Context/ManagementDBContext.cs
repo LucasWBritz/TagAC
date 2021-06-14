@@ -13,7 +13,7 @@ namespace TagAC.Management.Data.EFCore.Context
         }
 
         public DbSet<SmartLock> SmartLocks { get; set; }
-        public DbSet<AccessCredential> AccessCredentials { get; set; }
+        public DbSet<AccessControl> AccessCredentials { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

@@ -10,7 +10,7 @@ using TagAC.Management.Data.EFCore.Context;
 namespace TagAC.Management.Data.EFCore.Migrations
 {
     [DbContext(typeof(ManagementDBContext))]
-    [Migration("20210614095920_Initial Migration")]
+    [Migration("20210614121725_Initial Migration")]
     partial class InitialMigration
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -21,7 +21,7 @@ namespace TagAC.Management.Data.EFCore.Migrations
                 .HasAnnotation("ProductVersion", "5.0.7")
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-            modelBuilder.Entity("TagAC.Management.Domain.Entities.AccessCredential", b =>
+            modelBuilder.Entity("TagAC.Management.Domain.Entities.AccessControl", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -62,7 +62,7 @@ namespace TagAC.Management.Data.EFCore.Migrations
                     b.ToTable("SmartLocks");
                 });
 
-            modelBuilder.Entity("TagAC.Management.Domain.Entities.AccessCredential", b =>
+            modelBuilder.Entity("TagAC.Management.Domain.Entities.AccessControl", b =>
                 {
                     b.HasOne("TagAC.Management.Domain.Entities.SmartLock", "SmartLock")
                         .WithMany()

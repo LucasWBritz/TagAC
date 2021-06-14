@@ -2,6 +2,7 @@
 using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
+using TagAC.Domain.Commands;
 using TagAC.Domain.Enums;
 using TagAC.Management.Domain.Entities;
 using TagAC.Management.Domain.Interfaces;
@@ -10,8 +11,8 @@ namespace TagAC.Management.Domain.Commands.GrantAccess
 {
     public class GrantAccessCommandHandler : IRequestHandler<GrantAccessCommand, CommandResponse>
     {
-        private readonly IAccessCredentialsRepository _repository;
-        public GrantAccessCommandHandler(IAccessCredentialsRepository accessCredentialsRepository)
+        private readonly IAccessControlRepository _repository;
+        public GrantAccessCommandHandler(IAccessControlRepository accessCredentialsRepository)
         {
             _repository = accessCredentialsRepository;
         }
@@ -27,7 +28,7 @@ namespace TagAC.Management.Domain.Commands.GrantAccess
             }
             else
             {
-                var credentials = new AccessCredential()
+                var credentials = new AccessControl()
                 {
                     SmartLockId = request.SmartLockId,
                     RFID = request.RFID,

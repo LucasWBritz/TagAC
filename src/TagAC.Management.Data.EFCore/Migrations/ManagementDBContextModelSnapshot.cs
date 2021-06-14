@@ -19,7 +19,7 @@ namespace TagAC.Management.Data.EFCore.Migrations
                 .HasAnnotation("ProductVersion", "5.0.7")
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-            modelBuilder.Entity("TagAC.Management.Domain.Entities.AccessCredential", b =>
+            modelBuilder.Entity("TagAC.Management.Domain.Entities.AccessControl", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -60,7 +60,7 @@ namespace TagAC.Management.Data.EFCore.Migrations
                     b.ToTable("SmartLocks");
                 });
 
-            modelBuilder.Entity("TagAC.Management.Domain.Entities.AccessCredential", b =>
+            modelBuilder.Entity("TagAC.Management.Domain.Entities.AccessControl", b =>
                 {
                     b.HasOne("TagAC.Management.Domain.Entities.SmartLock", "SmartLock")
                         .WithMany()

@@ -4,9 +4,9 @@ using TagAC.Domain.Enums;
 
 namespace TagAC.Management.Domain.Entities
 {
-    public class AccessCredential : Entity<Guid>
+    public class AccessControl : Entity<Guid>
     {
-        public AccessCredential()
+        public AccessControl()
         {
             Id = Guid.NewGuid();
         }

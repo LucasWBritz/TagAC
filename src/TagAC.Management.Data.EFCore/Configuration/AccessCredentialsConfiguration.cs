@@ -4,9 +4,9 @@ using TagAC.Management.Domain.Entities;
 
 namespace TagAC.Management.Data.EFCore.Configuration
 {
-    public class AccessCredentialsConfiguration : IEntityTypeConfiguration<AccessCredential>
+    public class AccessCredentialsConfiguration : IEntityTypeConfiguration<AccessControl>
     {
-        public void Configure(EntityTypeBuilder<AccessCredential> builder)
+        public void Configure(EntityTypeBuilder<AccessControl> builder)
         {
             builder.ToTable("AccessCredentials");
             builder.HasKey(x => x.Id);

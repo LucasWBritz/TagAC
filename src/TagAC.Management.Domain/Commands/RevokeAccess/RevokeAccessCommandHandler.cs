@@ -2,6 +2,7 @@
 using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
+using TagAC.Domain.Commands;
 using TagAC.Domain.Enums;
 using TagAC.Management.Domain.Entities;
 using TagAC.Management.Domain.Interfaces;
@@ -10,9 +11,9 @@ namespace TagAC.Management.Domain.Commands.RevokeAccess
 {
     public class RevokeAccessCommandHandler : IRequestHandler<RevokeAccessCommand, CommandResponse>
     {
-        private readonly IAccessCredentialsRepository _repository;
+        private readonly IAccessControlRepository _repository;
 
-        public RevokeAccessCommandHandler(IAccessCredentialsRepository accessCredentialsRepository)
+        public RevokeAccessCommandHandler(IAccessControlRepository accessCredentialsRepository)
         {
             _repository = accessCredentialsRepository;
         }
@@ -28,7 +29,7 @@ namespace TagAC.Management.Domain.Commands.RevokeAccess
             }
             else
             {
-                var credentials = new AccessCredential()
+                var credentials = new AccessControl()
                 {
                     SmartLockId = request.SmartLockId,
                     RFID = request.RFID,

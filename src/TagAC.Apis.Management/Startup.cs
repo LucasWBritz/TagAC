@@ -35,7 +35,7 @@ namespace TagAC.Apis.Management
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "TagAC.Apis.Management", Version = "v1" });
             });
 
-            services.AddScoped<IAccessCredentialsRepository, AccessCredentialsRepository>();
+            services.AddScoped<IAccessControlRepository, AccessControlRepository>();
             services.AddScoped<ISmartLockRepository, SmartLockRepository>();
 
             services.ConfigureMediator();

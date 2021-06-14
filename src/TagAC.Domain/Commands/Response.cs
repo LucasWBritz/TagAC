@@ -1,8 +1,8 @@
 ﻿using System.Net;
 
-namespace TagAC.Management.Domain.Commands
+namespace TagAC.Domain.Commands
 {
-    public class CommandResponse
+    public class Response
     {
         public HttpStatusCode StatusCode { get; init; } = HttpStatusCode.OK;
         public string ErrorMessage { get; init; }
