@@ -11,7 +11,7 @@ namespace TagAC.Management.Data.EFCore.Configuration
             builder.ToTable("AccessCredentials");
             builder.HasKey(x => x.Id);
 
-            builder.Property(x => x.UserId)
+            builder.Property(x => x.RFID)
                 .HasColumnType("nvarchar(100)")
                 .HasMaxLength(100)
                 .IsRequired();
@@ -24,7 +24,7 @@ namespace TagAC.Management.Data.EFCore.Configuration
 
             builder.HasOne(x => x.SmartLock);
 
-            builder.HasIndex(entity => new { entity.SmartLockId, entity.UserId });
+            builder.HasIndex(entity => new { entity.SmartLockId, entity.RFID });
         }
     }
 }

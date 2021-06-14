@@ -7,6 +7,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
 using System;
+using TagAC.Apis.Management.Configuration;
 using TagAC.Management.Data.EFCore.Context;
 using TagAC.Management.Data.EFCore.Repositories.Entities;
 using TagAC.Management.Domain.Interfaces;
@@ -36,6 +37,8 @@ namespace TagAC.Apis.Management
 
             services.AddScoped<IAccessCredentialsRepository, AccessCredentialsRepository>();
             services.AddScoped<ISmartLockRepository, SmartLockRepository>();
+
+            services.ConfigureMediator();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILogger<Startup> logger)

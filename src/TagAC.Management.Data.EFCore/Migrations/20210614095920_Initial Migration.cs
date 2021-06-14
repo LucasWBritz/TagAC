@@ -24,7 +24,7 @@ namespace TagAC.Management.Data.EFCore.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    UserId = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    RFID = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
                     SmartLockId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Status = table.Column<int>(type: "int", nullable: false)
                 },
@@ -40,9 +40,9 @@ namespace TagAC.Management.Data.EFCore.Migrations
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_AccessCredentials_SmartLockId_UserId",
+                name: "IX_AccessCredentials_SmartLockId_RFID",
                 table: "AccessCredentials",
-                columns: new[] { "SmartLockId", "UserId" });
+                columns: new[] { "SmartLockId", "RFID" });
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)

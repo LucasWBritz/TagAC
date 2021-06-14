@@ -11,7 +11,7 @@ namespace TagAC.Management.Domain.Entities
             Id = Guid.NewGuid();
         }
 
-        public string UserId { get; set; } // Identity user id.
+        public string RFID { get; set; } // Identity user id.
         public Guid SmartLockId { get; set; }
         public virtual SmartLock SmartLock { get; set; }
         public AuthorizationStatus Status { get; set; }
