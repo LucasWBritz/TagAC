@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using TagAC.Apis.Identity.Context;
+using TagAC.BuildingBlocks.Authorization.JWT;
 
 namespace TagAC.Apis.Identity.Configuration
 {

@@ -6,7 +6,12 @@ namespace TagAC.Apis.AccessControl.Helpers
     {
         public static string ToCacheKey(this IHeaderParametersSession session)
         {
-            return $"{session.RFID}:{session.DeviceId}";
+            return ToCacheKey(session.RFID, session.DeviceId.ToString());
+        }
+
+        public static string ToCacheKey(string rfid, string deviceId)
+        {
+            return $"{rfid}:{deviceId}";
         }
     }
 }

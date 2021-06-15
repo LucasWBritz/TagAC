@@ -1,3 +1,4 @@
+using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
@@ -7,10 +8,15 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
 using System;
+using TagAC.Apis.Management.BackgroundServices;
 using TagAC.Apis.Management.Configuration;
+using TagAC.BuildingBlocks.Authorization.JWT;
 using TagAC.Management.Data.EFCore.Context;
 using TagAC.Management.Data.EFCore.Repositories.Entities;
+using TagAC.Management.Domain.Events;
+using TagAC.Management.Domain.Events.EventHandlers;
 using TagAC.Management.Domain.Interfaces;
+using TagAC.MessageBus;
 
 namespace TagAC.Apis.Management
 {
@@ -35,10 +41,16 @@ namespace TagAC.Apis.Management
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "TagAC.Apis.Management", Version = "v1" });
             });
 
+            services.AddJwtConfiguration(Configuration);
+
             services.AddScoped<IAccessControlRepository, AccessControlRepository>();
             services.AddScoped<ISmartLockRepository, SmartLockRepository>();
 
             services.ConfigureMediator();
+
+            services.AddMessageBus(Configuration.GetSection("MessageQueueConnection")["MessageBus"]);
+
+            services.AddHostedService<ManagementBackgroundService>();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILogger<Startup> logger)
@@ -56,6 +68,7 @@ namespace TagAC.Apis.Management
 
             app.UseRouting();
 
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>

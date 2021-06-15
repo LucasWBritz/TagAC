@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using TagAC.Domain.Commands;
 using TagAC.Domain.Enums;
 using TagAC.Management.Domain.Entities;
+using TagAC.Management.Domain.Events;
 using TagAC.Management.Domain.Interfaces;
 
 namespace TagAC.Management.Domain.Commands.GrantAccess
@@ -19,25 +20,27 @@ namespace TagAC.Management.Domain.Commands.GrantAccess
 
         public async Task<CommandResponse> Handle(GrantAccessCommand request, CancellationToken cancellationToken)
         {
-            var currentCredentials = await _repository.GetCredentials(request.RFID, request.SmartLockId);
-            if (currentCredentials != null)
+            var accessControl = await _repository.GetCredentials(request.RFID, request.SmartLockId);
+            if (accessControl != null)
             {
-                currentCredentials.Status = AuthorizationStatus.Authorized;
+                accessControl.Status = AuthorizationStatus.Authorized;
 
-                _repository.Update(currentCredentials);
+                _repository.Update(accessControl);
             }
             else
             {
-                var credentials = new AccessControl()
+                accessControl = new AccessControl()
                 {
                     SmartLockId = request.SmartLockId,
                     RFID = request.RFID,
                     Status = AuthorizationStatus.Authorized
                 };
                 
-                await _repository.CreateAsync(credentials);
+                await _repository.CreateAsync(accessControl);
             }
-            
+
+            accessControl.AddEvent(new AccessGrantedEvent(request.SmartLockId, request.RFID));
+
             await _repository.UnitOfWork.CommitAsync();
 
             return new CommandResponse()

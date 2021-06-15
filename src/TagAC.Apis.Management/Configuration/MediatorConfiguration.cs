@@ -3,6 +3,7 @@ using Microsoft.Extensions.DependencyInjection;
 using TagAC.Apis.Management.Behaviors;
 using TagAC.Management.Domain.Commands;
 using TagAC.Management.Domain.Commands.GrantAccess;
+using TagAC.Management.Domain.Events;
 
 namespace TagAC.Apis.Management.Configuration
 {
@@ -19,6 +20,12 @@ namespace TagAC.Apis.Management.Configuration
                   .AsImplementedInterfaces()
                   .WithTransientLifetime());
 
+            //// Register all domain events
+            services.Scan(scan => scan
+              .FromAssemblyOf<DomainEvent>()
+                .AddClasses(classes => classes.AssignableTo<INotificationHandler<DomainEvent>>())
+                  .AsImplementedInterfaces()
+                  .WithScopedLifetime());
 
             services.AddTransient(typeof(IPipelineBehavior<,>), typeof(CommandValidationBehavior<,>));
         }

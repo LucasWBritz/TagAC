@@ -1,6 +1,8 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using System.Threading;
 using System.Threading.Tasks;
+using TagAC.BuildingBlocks.Authorization;
 using TagAC.Domain.Commands;
 using TagAC.Management.Domain.Commands.GrantAccess;
 using TagAC.Management.Domain.Commands.RevokeAccess;
@@ -9,6 +11,7 @@ using TagAC.Management.Domain.Queries.ListAccessControl;
 namespace TagAC.Apis.Management.Controllers
 {
     [Route("[controller]")]
+    [RoleAuthorization("Admin")] // Using the role sent via claims for a basic authentication.
     public class AccessControlController
     {
         private readonly ISender _mediatorSender;
@@ -45,15 +48,15 @@ namespace TagAC.Apis.Management.Controllers
         }
 
         [HttpPost("grant")]
-        public async Task<IActionResult> GrantAccess(GrantAccessCommand command)
+        public async Task<IActionResult> GrantAccess([FromBody]GrantAccessCommand command, CancellationToken cancellationToken)
         {
-            return CreateCommandResponse(await _mediatorSender.Send(command));
+            return CreateCommandResponse(await _mediatorSender.Send(command, cancellationToken));
         }
 
         [HttpDelete("revoke")]
-        public async Task<IActionResult> RevokeAccess(RevokeAccessCommand command)
+        public async Task<IActionResult> RevokeAccess([FromBody]RevokeAccessCommand command, CancellationToken cancellationToken)
         {
-            return CreateCommandResponse(await _mediatorSender.Send(command));
+            return CreateCommandResponse(await _mediatorSender.Send(command, cancellationToken));
         }        
     }
 }

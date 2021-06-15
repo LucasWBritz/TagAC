@@ -4,7 +4,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 
-namespace TagAC.Apis.Identity.Configuration
+namespace TagAC.BuildingBlocks.Authorization.JWT
 {
     public static class JwtConfiguration
     {

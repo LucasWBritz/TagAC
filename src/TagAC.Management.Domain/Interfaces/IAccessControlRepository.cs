@@ -8,7 +8,7 @@ namespace TagAC.Management.Domain.Interfaces
 {
     public interface IAccessControlRepository : IRepository<AccessControl, Guid>
     {
-        Task<AccessControl> GetCredentials(string userId, Guid lockId);
-        Task<IEnumerable<AccessControl>> ListAll();
+        Task<AccessControl> GetCredentials(string rfid, Guid lockId);
+        Task<IEnumerable<AccessControl>> ListAll(string RFID);
     }
 }

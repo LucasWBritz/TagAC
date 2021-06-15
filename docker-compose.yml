@@ -1,8 +1,6 @@
 version: '3.4'
 
 services:
-    
-  ### Logs using Kibana and ElasticSearch
   es01:
     container_name: elasticsearch
     image: docker.elastic.co/elasticsearch/elasticsearch:7.13.1
@@ -57,6 +55,18 @@ services:
     networks:
      - tagacnetwork
 
+  rabbitmq:
+    image: rabbitmq:3-management-alpine
+    container_name: 'rabbitmq'
+    ports:
+        - 5672:5672
+        - 15672:15672
+    volumes:
+        - rabbitmqdata:/var/lib/rabbitmq
+        - rabbitmqlog:/var/log/rabbitmq
+    networks:
+      - tagacnetwork
+
   apis.ac:
     container_name: TagAC.APis.AccessControl
     image: ${DOCKER_REGISTRY-}tagacapisaccesscontrol
@@ -70,9 +80,11 @@ services:
       - tagacnetwork
     depends_on:
       - rediscache
+      - rabbitmq
     environment:
       - "CacheSettings__ConnectionString=rediscache:6379"   
       - "ElasticConfiguration__Uri=http://es01:9200"
+      - "MessageQueueConnection__MessageBus=host=rabbitmq:5672;publisherConfirms=true;timeout=10"
 
   apis.identity:
     container_name: TagAC.APis.Identity
@@ -104,9 +116,11 @@ services:
       - tagacnetwork
     depends_on:
       - tagac.database
+      - rabbitmq
     environment:
       - "ConnectionStrings__DefaultConnection=Server=tagac.database;Database=TagACManagement;User Id=sa;Password=123@qwe@123;MultipleActiveResultSets=true"       
       - "ElasticConfiguration__Uri=http://es01:9200"
+      - "MessageQueueConnection__MessageBus=host=rabbitmq:5672;publisherConfirms=true;timeout=10"
 
 networks:
     tagacnetwork:
@@ -116,3 +130,5 @@ volumes:
     elasticsearch-data:
     sqldatafiles:
     sqldata:
+    rabbitmqdata:
+    rabbitmqlog:

@@ -1,4 +1,4 @@
-﻿namespace TagAC.Apis.Identity.Configuration
+﻿namespace TagAC.BuildingBlocks.Authorization.JWT
 {
     public class JwtConfigSettings
     {

@@ -4,11 +4,13 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
+using TagAC.Apis.AccessControl.BackgroundServices;
 using TagAC.Apis.AccessControl.Configurations;
 using TagAC.Apis.AccessControl.Middlewares;
 using TagAC.Apis.AccessControl.Repositories;
 using TagAC.Apis.AccessControl.Services;
 using TagAC.Apis.AccessControl.Sessions;
+using TagAC.MessageBus;
 
 namespace TagAC.Apis.AccessControl
 {
@@ -34,6 +36,10 @@ namespace TagAC.Apis.AccessControl
             services.AddScoped<IHeaderParametersSession, HeaderParametersSession>();
             services.AddScoped<IAccessControlService, AccessControlService>();
             services.AddScoped<ICacheRepository, CacheRepository>();
+
+
+            services.AddMessageBus(Configuration.GetSection("MessageQueueConnection")["MessageBus"]);
+            services.AddHostedService<AccessControlBackgroundService>();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

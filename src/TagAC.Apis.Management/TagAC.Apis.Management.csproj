@@ -35,7 +35,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\TagAC.BuildingBlocks.Authorization\TagAC.BuildingBlocks.Authorization.csproj" />
     <ProjectReference Include="..\TagAC.Management.Data.EFCore\TagAC.Management.Data.EFCore.csproj" />
+    <ProjectReference Include="..\TagAC.MessageBus\TagAC.MessageBus.csproj" />
   </ItemGroup>
 
 </Project>

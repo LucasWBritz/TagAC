@@ -9,8 +9,8 @@ using System.Linq;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
-using TagAC.Apis.Identity.Configuration;
 using TagAC.Apis.Identity.Models;
+using TagAC.BuildingBlocks.Authorization.JWT;
 
 namespace TagAC.Apis.Identity.Services
 {
