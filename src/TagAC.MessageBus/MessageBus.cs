@@ -4,7 +4,6 @@ using RabbitMQ.Client.Exceptions;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
-using TagAC.Domain.Commands;
 using TagAC.Domain.Events;
 
 namespace TagAC.MessageBus

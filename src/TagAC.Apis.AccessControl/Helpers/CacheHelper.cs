@@ -1,4 +1,5 @@
-﻿using TagAC.Apis.AccessControl.Sessions;
+﻿using System;
+using TagAC.Apis.AccessControl.Sessions;
 
 namespace TagAC.Apis.AccessControl.Helpers
 {
@@ -6,7 +7,11 @@ namespace TagAC.Apis.AccessControl.Helpers
     {
         public static string ToCacheKey(this IHeaderParametersSession session)
         {
-            return ToCacheKey(session.RFID, session.DeviceId.ToString());
+            return ToCacheKey(session.RFID, session.SmartLockId);
+        } 
+        public static Guid ToSmartLockId(this IHeaderParametersSession session)
+        {
+            return Guid.Parse(session.SmartLockId);
         }
 
         public static string ToCacheKey(string rfid, string deviceId)

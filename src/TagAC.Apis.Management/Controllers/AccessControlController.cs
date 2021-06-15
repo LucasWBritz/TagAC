@@ -21,7 +21,7 @@ namespace TagAC.Apis.Management.Controllers
         }        
 
         [HttpGet()]
-        public async Task<IActionResult> ListAll(ListAccessControlQuery query)
+        public async Task<IActionResult> ListAll([FromBody]ListAccessControlQuery query)
         {
             return CreateQueryResponse(await _mediatorSender.Send(query));
         }

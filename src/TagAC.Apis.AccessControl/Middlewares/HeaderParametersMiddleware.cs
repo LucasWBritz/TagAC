@@ -22,11 +22,11 @@ namespace TagAC.Apis.AccessControl.Middlewares
                 session.RFID = rfid;
             }
 
-            if (context.Request.Headers.ContainsKey("DeviceId"))
+            if (context.Request.Headers.ContainsKey("SmartLockId"))
             {
-                var lockId = context.Request.Headers["DeviceId"].ToString().Trim();
+                var lockId = context.Request.Headers["SmartLockId"].ToString().Trim();
 
-                session.DeviceId = lockId;
+                session.SmartLockId = lockId;
             }
 
             await _next(context);

@@ -3,6 +3,6 @@
     public interface IHeaderParametersSession
     {
         string RFID { get; set; }
-        string DeviceId { get; set; }
+        string SmartLockId { get; set; }       
     }
 }

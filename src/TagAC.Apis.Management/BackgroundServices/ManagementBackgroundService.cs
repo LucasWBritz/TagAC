@@ -5,6 +5,7 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 using TagAC.Domain.Enums;
+using TagAC.Management.Domain.Entities;
 using TagAC.Management.Domain.Events.RequestEvents;
 using TagAC.Management.Domain.Interfaces;
 using TagAC.MessageBus;
@@ -43,7 +44,14 @@ namespace TagAC.Apis.Management.BackgroundServices
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
-            await SetResponder(stoppingToken);
+            await SetSubscribers(stoppingToken); // to save logs for authorized or denied.
+            await SetResponder(stoppingToken); // To respond to calls from the accesscontrol api.
+        }
+
+        private async Task SetSubscribers(CancellationToken cancellationToken)
+        {
+            await _messageBus.SubscribeAsync<AccessAuthorizedRequest>("access.authorized", (authorized) => HandleAccessAuthorized(authorized, cancellationToken), cancellationToken);
+            await _messageBus.SubscribeAsync<AccessDeniedRequest>("access.denied", (denied) => HandleAccessDenied(denied, cancellationToken), cancellationToken);
         }
 
         private async Task SetResponder(CancellationToken cancellationToken)
@@ -70,6 +78,42 @@ namespace TagAC.Apis.Management.BackgroundServices
                     Status = acStatus,
                     EntityId = accessControl.Id
                 };
+            }
+        }
+
+        private async Task HandleAccessAuthorized(AccessAuthorizedRequest accessAuthorized, CancellationToken cancellationToken)
+        {
+            using (var scope = _serviceProvider.CreateScope())
+            {
+                // Since I'm only storing logs I'm saving them here directly.
+                var repository = scope.ServiceProvider.GetRequiredService<IAccessControlHistoryRepository>();
+                await repository.CreateAsync(new AccessControlHistory()
+                {
+                    RFID = accessAuthorized.RFID,
+                    SmartLockId = accessAuthorized.SmartLockId,
+                    Status = AuthorizationStatus.Authorized,
+                    Time = accessAuthorized.Date
+                });
+
+                await repository.UnitOfWork.CommitAsync();
+            }
+        }
+        
+        private async Task HandleAccessDenied(AccessDeniedRequest accessDenied, CancellationToken cancellationToken)
+        {
+            using (var scope = _serviceProvider.CreateScope())
+            {
+                // Since I'm only storing logs I'm saving them here directly.
+                var repository = scope.ServiceProvider.GetRequiredService<IAccessControlHistoryRepository>();
+                await repository.CreateAsync(new AccessControlHistory()
+                {
+                    RFID = accessDenied.RFID,
+                    SmartLockId = accessDenied.SmartLockId,
+                    Status = AuthorizationStatus.Unauthorized,
+                    Time = accessDenied.Date
+                });
+
+                await repository.UnitOfWork.CommitAsync();
             }
         }
     }

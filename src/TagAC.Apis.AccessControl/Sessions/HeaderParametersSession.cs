@@ -3,6 +3,6 @@
     public class HeaderParametersSession : IHeaderParametersSession
     {
         public string RFID { get; set; }
-        public string DeviceId { get; set; }       
+        public string SmartLockId { get; set; }       
     }
 }

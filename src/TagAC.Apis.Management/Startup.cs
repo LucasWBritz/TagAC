@@ -45,6 +45,7 @@ namespace TagAC.Apis.Management
 
             services.AddScoped<IAccessControlRepository, AccessControlRepository>();
             services.AddScoped<ISmartLockRepository, SmartLockRepository>();
+            services.AddScoped<IAccessControlHistoryRepository, AccessControlHistoryRepository>();
 
             services.ConfigureMediator();
 
@@ -53,9 +54,10 @@ namespace TagAC.Apis.Management
             services.AddHostedService<ManagementBackgroundService>();
         }
 
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILogger<Startup> logger)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILogger<Startup> logger, ISmartLockRepository repository)
         {
             RunDatabaseMigrations(app, logger);
+            ApplicationDbInitializer.SeedDoors(repository).GetAwaiter().GetResult();
 
             if (env.IsDevelopment())
             {

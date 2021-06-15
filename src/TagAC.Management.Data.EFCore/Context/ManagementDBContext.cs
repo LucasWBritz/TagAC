@@ -1,6 +1,5 @@
 ﻿using MediatR;
 using Microsoft.EntityFrameworkCore;
-using System;
 using System.Linq;
 using System.Threading.Tasks;
 using TagAC.Domain.Entities;
@@ -21,6 +20,7 @@ namespace TagAC.Management.Data.EFCore.Context
 
         public DbSet<SmartLock> SmartLocks { get; set; }
         public DbSet<AccessControl> AccessCredentials { get; set; }
+        public DbSet<AccessControlHistory> AccessControlHistory { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

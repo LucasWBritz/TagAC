@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TagAC.Management.Data.EFCore.Context;
 
 namespace TagAC.Management.Data.EFCore.Migrations
 {
     [DbContext(typeof(ManagementDBContext))]
-    partial class ManagementDBContextModelSnapshot : ModelSnapshot
+    [Migration("20210615224533_Add Access Control History")]
+    partial class AddAccessControlHistory
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
