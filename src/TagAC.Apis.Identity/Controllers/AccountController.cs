@@ -13,7 +13,7 @@ namespace TagAC.Apis.Identity.Controllers
         public AccountController(IAuthenticationService authenticationService)
         {
             _service = authenticationService;
-        }
+        }        
 
         [HttpPost("login")]
         public async Task<IActionResult> Authenticate(LoginModel input)

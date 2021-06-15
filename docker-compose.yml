@@ -16,8 +16,8 @@ services:
       - xpack.watcher.enabled=false
       - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
       - discovery.type=single-node
-    networks:
-      - tagacnetwork
+    #networks:
+    #  - tagacnetwork
 
   kibana:
     image: docker.elastic.co/kibana/kibana:7.13.1
@@ -28,99 +28,69 @@ services:
     environment:
       ELASTICSEARCH_URL: http://es01:9200
       ELASTICSEARCH_HOSTS: http://es01:9200
-    networks:
-      - tagacnetwork
+    #networks:
+    #  - tagacnetwork
 
   tagac.database:
-    container_name: TagAC.SQLDatabase
+    container_name: SQLDatabase
     image: mcr.microsoft.com/mssql/server:2019-latest
     ports:
-      - "1433:1433"
+      - "14330:1433"
     environment:
        SA_PASSWORD: "123@qwe@123"
        ACCEPT_EULA: "Y"
     volumes: 
       - sqldatafiles:/var/opt/sqlserver
       - sqldata:/var/opt/mssql
-    networks:
-      - tagacnetwork
+    #networks:
+    #  - tagacnetwork
     restart: always
 
   rediscache:
-    container_name: TagAC.APis.AccessControl.Redis
+    container_name: redis
     image: redis:alpine
     restart: always
     ports:
       - "6379:6379"
-    networks:
-     - tagacnetwork
+    #networks:
+    # - tagacnetwork
 
   rabbitmq:
     image: rabbitmq:3-management-alpine
-    container_name: 'rabbitmq'
+    container_name: rabbitmq
+    restart: always
     ports:
         - 5672:5672
         - 15672:15672
     volumes:
         - rabbitmqdata:/var/lib/rabbitmq
         - rabbitmqlog:/var/log/rabbitmq
-    networks:
-      - tagacnetwork
+    #networks:
+    #  - tagacnetwork
 
-  apis.ac:
-    container_name: TagAC.APis.AccessControl
-    image: ${DOCKER_REGISTRY-}tagacapisaccesscontrol
+  apigateway:
+    image: gateway    
     build:
       context: .
-      dockerfile: src/TagAC.Apis.AccessControl/Dockerfile
-    ports:
-      - "5001:80"
-      - "5002:443"
-    networks:
-      - tagacnetwork
-    depends_on:
-      - rediscache
-      - rabbitmq
-    environment:
-      - "CacheSettings__ConnectionString=rediscache:6379"   
-      - "ElasticConfiguration__Uri=http://es01:9200"
-      - "MessageQueueConnection__MessageBus=host=rabbitmq:5672;publisherConfirms=true;timeout=10"
+      dockerfile: src/TagAC.ApiGateway/Dockerfile    
 
-  apis.identity:
-    container_name: TagAC.APis.Identity
-    image: ${DOCKER_REGISTRY-}tagacapisidentity
+  apiac:
+    image: apiac
     build:
       context: .
-      dockerfile: src/TagAC.Apis.Identity/Dockerfile
-    ports:
-      - "5003:80"
-      - "5004:443"
-    networks:
-      - tagacnetwork
-    depends_on:
-      - tagac.database
-    environment:
-      - "ConnectionStrings__DefaultConnection=Server=tagac.database;Database=TagACAuth;User Id=sa;Password=123@qwe@123;MultipleActiveResultSets=true"       
-      - "ElasticConfiguration__Uri=http://es01:9200"
-
-  apis.management:
-    container_name: TagAC.APis.Management
-    image: ${DOCKER_REGISTRY-}tagacapismanagement
+      dockerfile: src/TagAC.Apis.AccessControl/Dockerfile    
+       
+  identity:
+    image: identity
     build:
       context: .
-      dockerfile: src/TagAC.Apis.Management/Dockerfile
-    ports:
-      - "5005:80"
-      - "5006:443"
-    networks:
-      - tagacnetwork
-    depends_on:
-      - tagac.database
-      - rabbitmq
-    environment:
-      - "ConnectionStrings__DefaultConnection=Server=tagac.database;Database=TagACManagement;User Id=sa;Password=123@qwe@123;MultipleActiveResultSets=true"       
-      - "ElasticConfiguration__Uri=http://es01:9200"
-      - "MessageQueueConnection__MessageBus=host=rabbitmq:5672;publisherConfirms=true;timeout=10"
+      dockerfile: src/TagAC.Apis.Identity/Dockerfile    
+    
+  apimanagement:
+    image: apimanagement
+    build:
+      context: .
+      dockerfile: src/TagAC.Apis.Management/Dockerfile    
 
 networks:
     tagacnetwork:
