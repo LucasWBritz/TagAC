@@ -16,8 +16,6 @@ services:
       - xpack.watcher.enabled=false
       - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
       - discovery.type=single-node
-    #networks:
-    #  - tagacnetwork
 
   kibana:
     image: docker.elastic.co/kibana/kibana:7.13.1
@@ -28,8 +26,6 @@ services:
     environment:
       ELASTICSEARCH_URL: http://es01:9200
       ELASTICSEARCH_HOSTS: http://es01:9200
-    #networks:
-    #  - tagacnetwork
 
   tagac.database:
     container_name: SQLDatabase
@@ -42,8 +38,6 @@ services:
     volumes: 
       - sqldatafiles:/var/opt/sqlserver
       - sqldata:/var/opt/mssql
-    #networks:
-    #  - tagacnetwork
     restart: always
 
   rediscache:
@@ -52,8 +46,6 @@ services:
     restart: always
     ports:
       - "6379:6379"
-    #networks:
-    # - tagacnetwork
 
   rabbitmq:
     image: rabbitmq:3-management-alpine
@@ -65,8 +57,6 @@ services:
     volumes:
         - rabbitmqdata:/var/lib/rabbitmq
         - rabbitmqlog:/var/log/rabbitmq
-    #networks:
-    #  - tagacnetwork
 
   apigateway:
     image: gateway    
