@@ -28,19 +28,23 @@ A TAG Access Control system build using microservice architecture.
   * `ElasticSearch` + `Kibana`: Store logs into a centralized place
 
 #### Infra + Messaging
-  * `RabbitMq`: PubSub and Request/Response patterns to allow async communication between the AccessControl api and the ManagementApi
+  * `RabbitMq`: PubSub and Request/Response patterns to allow async communication between the Access Control API and the Management API
   * `Ocelot`: Api Gateway. Rate Limit (for Authorization process)
 
 #### Patterns
   * `Pub Sub`: Allow us to send messages from the Management Api to Access Control Api. Ex: When we Grant access to someone and we need to update the cache.
   * `Request Response`: Using RPC, make a call from the Access Control Api to fetch updated data from the Management Api.
   * `CQRS`: Command Query Responsability Segregation. Split queries from other operations. Allow us to scale different parts of the application without having to rewrite it entirely. Also helps us to organize our business logic withing command handlers.
-  * `Domain Events`: Triggers actions to be executed depending on what happened in the domain. For instance, every time we Grant Access to someone we raise an AccessGrantedEvent which publishes a message to the AccessControl API update the cache.
+  * `Domain Events`: Triggers actions to be executed depending on what happened in the domain. For instance, every time we Grant Access to someone we raise an AccessGrantedEvent which publishes a message to the Access Control API update the cache.
   * `Repository Pattern` + `UnitOfWork`: Centralized interface for data access and manipulation.
 
 #### Testing
   * `xUnit`: Integration tests.
 
+#### Async Communication and Events
+  * Every time we Grant or Revoke access to a SmartLockId for an RFID we raise events. Those events publish messages through rabbitMQ which will be executed by the Access Control API to store the credentials on Redis cache. Ex:  AccessGrantedEvent and AccessRevokedEvent.
+  * Every time someone is authorized or denied on the Access Control API we also publish a message wich will be executed on the management API to persist logs.
+  * Every time we hit the Access Control Api and we don't have the credentials cached we request this information from the management api using request/response pattern.
 
 ### HowTos
 
