@@ -10,9 +10,10 @@ A TAG Access Control system build using microservice architecture.
     ├── 03 Domain                          # Domain layer
     ├── 04 Services                        # Available APIS
     │   ├── Access Control                 # API Desinged to only take care of allowing or denying access.
-    │   ├── Identy                         # API to manage authentication. Generates JWT 
+    │   ├── Identity                       # API to manage authentication. Generates JWT 
     │   ├── Management                     # API responsible to manage access control. Authorize or revoke access to credentials
     │   │   ├── Management.Domain          # The specialized domain focused on management business rules
+    │   │   ├── Management.Tests           # Tests
 
 ### Conventions
 
@@ -33,7 +34,7 @@ A TAG Access Control system build using microservice architecture.
 #### Patterns
   * `Pub Sub`: Allow us to send messages from the Management Api to Access Control Api. Ex: When we Grant access to someone and we need to update the cache.
   * `Request Response`: Using RPC, make a call from the Access Control Api to fetch updated data from the Management Api.
-  * `CQRS`: Command Query Responsability Segregation. Split queries from other operations. Allow us to scale different parts of the application without having to rewrite our application entirely. Also helps us to organize our business logic withing command handlers.
+  * `CQRS`: Command Query Responsability Segregation. Split queries from other operations. Allow us to scale different parts of the application without having to rewrite it entirely. Also helps us to organize our business logic withing command handlers.
   * `Domain Events`: Triggers actions to be executed depending on what happened in the domain. For instance, every time we Grant Access to someone we raise an AccessGrantedEvent which publishes a message to the AccessControl API update the cache.
   * `Repository Pattern` + `UnitOfWork`: Centralized interface for data access and manipulation.
 
@@ -47,3 +48,14 @@ A TAG Access Control system build using microservice architecture.
   ```c#
   dotnet ef migrations add "Migration Name" --project src\TagAC.Management.Data.EFCore --startup-project src\TagAC.Apis.Management --output-dir Migrations 
   ```
+ * How to run this?
+   - Using Visual Studio you can set the docker-compose project as startup and then just press F5.
+   - Or, `docker compose up`
+
+  * What is the default user/password? 
+    - `User`: admin@admin.com
+    - `Pass`: 123@qwe
+  You can change this on the ApplicationDbInitializer.cs from the TasAC.Apis.Identity project before running the application for the first time.
+  
+  
+
