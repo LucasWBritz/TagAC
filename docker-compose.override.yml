@@ -7,6 +7,7 @@ services:
       - "ElasticConfiguration__Uri=http://es01:9200"
     ports:
       - 5001:80
+    restart: always
 
   apiac:
     environment:
@@ -15,10 +16,12 @@ services:
       - "ElasticConfiguration__Uri=http://es01:9200"
       - "MessageQueueConnection__MessageBus=host=rabbitmq:5672;publisherConfirms=true;timeout=10"
     depends_on:
+      - rabbitmq  
       - rediscache
-      - rabbitmq 
+       
     ports:
       - 5002:80
+    restart: always
 
   identity:
     environment:
@@ -29,6 +32,7 @@ services:
       - tagac.database
     ports:
       - 5003:80
+    restart: always
 
   apimanagement:
     environment:
@@ -41,5 +45,5 @@ services:
       - rabbitmq
     ports:
       - 5004:80
-
+    restart: always
   

@@ -11,6 +11,7 @@ using System;
 using TagAC.Apis.Management.BackgroundServices;
 using TagAC.Apis.Management.Configuration;
 using TagAC.BuildingBlocks.Authorization.JWT;
+using TagAC.Logging;
 using TagAC.Management.Data.EFCore.Context;
 using TagAC.Management.Data.EFCore.Repositories.Entities;
 using TagAC.Management.Domain.Events;
@@ -65,6 +66,8 @@ namespace TagAC.Apis.Management
                 app.UseSwagger();
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "TagAC.Apis.Management v1"));
             }
+
+            app.ConfigureGlobalExceptionHandler(logger);
 
             app.UseHttpsRedirection();
 

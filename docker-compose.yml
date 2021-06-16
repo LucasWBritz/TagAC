@@ -1,6 +1,17 @@
 version: '3.4'
 
 services:
+  rabbitmq:
+    image: rabbitmq:3-management-alpine
+    container_name: rabbitmq
+    restart: always
+    ports:
+        - 5672:5672
+        - 15672:15672
+    volumes:
+        - rabbitmqdata:/var/lib/rabbitmq
+        - rabbitmqlog:/var/log/rabbitmq
+
   es01:
     container_name: elasticsearch
     image: docker.elastic.co/elasticsearch/elasticsearch:7.13.1
@@ -45,18 +56,7 @@ services:
     image: redis:alpine
     restart: always
     ports:
-      - "6379:6379"
-
-  rabbitmq:
-    image: rabbitmq:3-management-alpine
-    container_name: rabbitmq
-    restart: always
-    ports:
-        - 5672:5672
-        - 15672:15672
-    volumes:
-        - rabbitmqdata:/var/lib/rabbitmq
-        - rabbitmqlog:/var/log/rabbitmq
+      - "6379:6379"  
 
   apigateway:
     image: gateway    

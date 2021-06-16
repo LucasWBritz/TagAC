@@ -76,7 +76,7 @@ namespace TagAC.Apis.Management.BackgroundServices
                 return new AuthorizationStatusResponse()
                 {
                     Status = acStatus,
-                    EntityId = accessControl.Id
+                    EntityId = accessControl?.Id
                 };
             }
         }

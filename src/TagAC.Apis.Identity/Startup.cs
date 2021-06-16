@@ -11,6 +11,7 @@ using System;
 using TagAC.Apis.Identity.Configuration;
 using TagAC.Apis.Identity.Context;
 using TagAC.Apis.Identity.Services;
+using TagAC.Logging;
 
 namespace TagAC.Apis.Identity
 {
@@ -48,6 +49,8 @@ namespace TagAC.Apis.Identity
                 app.UseSwagger();
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "TagAC.Apis.Identity v1"));
             }
+            
+            app.ConfigureGlobalExceptionHandler(logger);
 
             app.UseHttpsRedirection();
             app.UseRouting();

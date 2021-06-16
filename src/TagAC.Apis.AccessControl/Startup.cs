@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
 using TagAC.Apis.AccessControl.BackgroundServices;
 using TagAC.Apis.AccessControl.Configurations;
@@ -10,6 +11,7 @@ using TagAC.Apis.AccessControl.Middlewares;
 using TagAC.Apis.AccessControl.Repositories;
 using TagAC.Apis.AccessControl.Services;
 using TagAC.Apis.AccessControl.Sessions;
+using TagAC.Logging;
 using TagAC.MessageBus;
 
 namespace TagAC.Apis.AccessControl
@@ -42,14 +44,16 @@ namespace TagAC.Apis.AccessControl
             services.AddHostedService<AccessControlBackgroundService>();
         }
 
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILogger<Startup> logger)
         {        
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
                 app.UseSwagger();
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "TagAC.Apis.AccessControl v1"));
-            }            
+            }
+
+            app.ConfigureGlobalExceptionHandler(logger);
 
             app.UseHttpsRedirection();
 
