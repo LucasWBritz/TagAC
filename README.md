@@ -9,7 +9,7 @@ A TAG Access Control system build using microservice architecture.
     ├── 02 Building Blocks                 # Shared code used to build and integrate the services
     ├── 03 Domain                          # Domain layer
     ├── 04 Services                        # Available APIS
-    │   ├── Access Control                 # API Desinged to only take care of allowing or denying access.
+    │   ├── Access Control                 # API Designed to only take care of allowing or denying access
     │   ├── Identity                       # API to manage authentication. Generates JWT 
     │   ├── Management                     # API responsible to manage access control. Authorize or revoke access to credentials
     │   │   ├── Management.Domain          # The specialized domain focused on management business rules
