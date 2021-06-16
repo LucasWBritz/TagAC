@@ -57,5 +57,10 @@ A TAG Access Control system build using microservice architecture.
     - `Pass`: 123@qwe
   You can change this on the ApplicationDbInitializer.cs from the TasAC.Apis.Identity project before running the application for the first time.
   
+  * How to run the services? 
+    - You can either run them using visual studio and setting the docker-compose project as Startup Project or using the following command:
+    - `docker compose up --build -d`
+
+
   
 
