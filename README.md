@@ -50,17 +50,11 @@ A TAG Access Control system build using microservice architecture.
   ```
  * How to run this?
    - Using Visual Studio you can set the docker-compose project as startup and then just press F5.
-   - Or, `docker compose up`
+   - Or, `docker compose up --build -d`
 
   * What is the default user/password? 
     - `User`: admin@admin.com
     - `Pass`: 123@qwe
   You can change this on the ApplicationDbInitializer.cs from the TasAC.Apis.Identity project before running the application for the first time.
-  
-  * How to run the services? 
-    - You can either run them using visual studio and setting the docker-compose project as Startup Project or using the following command:
-    - `docker compose up --build -d`
 
-
-  
 
