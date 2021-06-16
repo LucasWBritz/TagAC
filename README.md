@@ -47,22 +47,3 @@ A TAG Access Control system build using microservice architecture.
   ```c#
   dotnet ef migrations add "Migration Name" --project src\TagAC.Management.Data.EFCore --startup-project src\TagAC.Apis.Management --output-dir Migrations 
   ```
-
-* How to run this on your machine?
-  ```bash
-    #clone this repo
-    ~-> git clone git@github.com:LucasWBritz/TagAC.git
-
-    ~-> cd TagAC/
-    ~-> docker compose up
-  ```
-
-* How to make requests to the access control api?
-  ```
-    [GET] -> http://localhost:5002/AccessControl
-  ```
-  You'll have to add below parameters in the HEADER. (See Conventions for more info)
-  - `RFID`: ID. 
-  - `SmartLockId`: Device id. 
-
- Responses: 200 OK, 401 Unauthorized. 
