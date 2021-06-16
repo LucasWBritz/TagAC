@@ -1,0 +1,104 @@
+version: '3.4'
+
+services:
+  es01:
+    container_name: elasticsearch
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.13.1
+    restart: always
+    ports: 
+      - 9200:9200
+    volumes:
+      - elasticsearch-data:/usr/share/elasticsearch/data
+    environment:
+      - node.name=es01
+      - cluster.name=es-tagac-cluster
+      - xpack.monitoring.enabled=true
+      - xpack.watcher.enabled=false
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+      - discovery.type=single-node
+    #networks:
+    #  - tagacnetwork
+
+  kibana:
+    image: docker.elastic.co/kibana/kibana:7.13.1
+    container_name: kibana
+    ports:
+      - 5601:5601
+    restart: always
+    environment:
+      ELASTICSEARCH_URL: http://es01:9200
+      ELASTICSEARCH_HOSTS: http://es01:9200
+    #networks:
+    #  - tagacnetwork
+
+  tagac.database:
+    container_name: SQLDatabase
+    image: mcr.microsoft.com/mssql/server:2019-latest
+    ports:
+      - "14330:1433"
+    environment:
+       SA_PASSWORD: "123@qwe@123"
+       ACCEPT_EULA: "Y"
+    volumes: 
+      - sqldatafiles:/var/opt/sqlserver
+      - sqldata:/var/opt/mssql
+    #networks:
+    #  - tagacnetwork
+    restart: always
+
+  rediscache:
+    container_name: redis
+    image: redis:alpine
+    restart: always
+    ports:
+      - "6379:6379"
+    #networks:
+    # - tagacnetwork
+
+  rabbitmq:
+    image: rabbitmq:3-management-alpine
+    container_name: rabbitmq
+    restart: always
+    ports:
+        - 5672:5672
+        - 15672:15672
+    volumes:
+        - rabbitmqdata:/var/lib/rabbitmq
+        - rabbitmqlog:/var/log/rabbitmq
+    #networks:
+    #  - tagacnetwork
+
+  apigateway:
+    image: gateway    
+    build:
+      context: .
+      dockerfile: src/TagAC.ApiGateway/Dockerfile    
+
+  apiac:
+    image: apiac
+    build:
+      context: .
+      dockerfile: src/TagAC.Apis.AccessControl/Dockerfile    
+       
+  identity:
+    image: identity
+    build:
+      context: .
+      dockerfile: src/TagAC.Apis.Identity/Dockerfile    
+    
+  apimanagement:
+    image: apimanagement
+    build:
+      context: .
+      dockerfile: src/TagAC.Apis.Management/Dockerfile    
+
+networks:
+    tagacnetwork:
+        driver: bridge
+
+volumes:
+    elasticsearch-data:
+    sqldatafiles:
+    sqldata:
+    rabbitmqdata:
+    rabbitmqlog:

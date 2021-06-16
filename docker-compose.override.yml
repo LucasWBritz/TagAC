@@ -1,0 +1,45 @@
+version: '3.4'
+
+services:
+  apigateway:
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - "ElasticConfiguration__Uri=http://es01:9200"
+    ports:
+      - 5001:80
+
+  apiac:
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - "CacheSettings__ConnectionString=rediscache:6379"   
+      - "ElasticConfiguration__Uri=http://es01:9200"
+      - "MessageQueueConnection__MessageBus=host=rabbitmq:5672;publisherConfirms=true;timeout=10"
+    depends_on:
+      - rediscache
+      - rabbitmq 
+    ports:
+      - 5002:80
+
+  identity:
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - "ConnectionStrings__DefaultConnection=Server=tagac.database;Database=TagACAuth;User Id=sa;Password=123@qwe@123;MultipleActiveResultSets=true"       
+      - "ElasticConfiguration__Uri=http://es01:9200"
+    depends_on:
+      - tagac.database
+    ports:
+      - 5003:80
+
+  apimanagement:
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development  
+      - "ConnectionStrings__DefaultConnection=Server=tagac.database;Database=TagACManagement;User Id=sa;Password=123@qwe@123;MultipleActiveResultSets=true"       
+      - "ElasticConfiguration__Uri=http://es01:9200"
+      - "MessageQueueConnection__MessageBus=host=rabbitmq:5672;publisherConfirms=true;timeout=10"
+    depends_on:
+      - tagac.database
+      - rabbitmq
+    ports:
+      - 5004:80
+
+  
