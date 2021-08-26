@@ -10,7 +10,7 @@ namespace TagAC.Domain.Events
 
         protected Event()
         {
-            Timestamp = DateTime.Now;
+            Timestamp = DateTime.UtcNow;
         }
     }
 }

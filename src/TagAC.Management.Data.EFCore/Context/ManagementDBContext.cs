@@ -1,5 +1,6 @@
 ﻿using MediatR;
 using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using TagAC.Domain.Entities;
@@ -52,7 +53,7 @@ namespace TagAC.Management.Data.EFCore.Context
         public async Task<int> CommitAsync()
         {
             var result = await base.SaveChangesAsync();
-            if(result > 0) // success
+            if (result > 0) // success
             {
                 await _mediatorHandler.PublishDomainEvents(this);
             }
@@ -68,7 +69,8 @@ namespace TagAC.Management.Data.EFCore.Context
 
             var domainEvents = entitiesWithDomainEvents.SelectMany(x => x.Entity.Events);
 
-            var tasks = domainEvents.Select(async (domainEvent) => await mediator.Publish(domainEvent));
+            //var tasks = domainEvents.Select(async (domainEvent) => await mediator.Publish(domainEvent));
+            IEnumerable<Task> tasks = domainEvents.Select(dEvent => mediator.Publish(dEvent));
 
             await Task.WhenAll(tasks);
 

@@ -14,7 +14,6 @@ namespace TagAC.Management.Data.EFCore.Configuration
             builder.Property(x => x.Name)
                 .HasColumnName("Name")
                 .HasColumnType("varchar(200)")
-                .HasMaxLength(200)
                 .IsRequired();
         }
     }

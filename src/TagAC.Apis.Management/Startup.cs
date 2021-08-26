@@ -32,9 +32,8 @@ namespace TagAC.Apis.Management
 
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddScoped<ManagementDBContext>();
-
-            services.AddDbContext<ManagementDBContext>(options => options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+            services.AddDbContext<ManagementDBContext>(options 
+                => options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
 
             services.AddControllers();
             services.AddSwaggerGen(c =>
