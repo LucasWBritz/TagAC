@@ -10,6 +10,7 @@ namespace TagAC.Apis.Management.Behaviors
 {
     public class CommandValidationBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
         where TResponse : Response, new()
+        where TRequest : IRequest<TResponse>
     {
         private readonly ILogger<CommandValidationBehavior<TRequest, TResponse>> logger;
         private readonly IValidationHandler<TRequest> validationHandler;
